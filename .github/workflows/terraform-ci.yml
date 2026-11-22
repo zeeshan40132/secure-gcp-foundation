@@ -52,4 +52,5 @@ jobs:
           soft_fail: false
 
       - name: Run custom security policy tests
+        if: always()
         run: python3 ../policy/tests/run_tests.py
