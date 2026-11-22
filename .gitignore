@@ -1,0 +1,26 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Keep provider lockfile committed
+!.terraform.lock.hcl
+
+# Emulator runtime data
+data/
+
+# Local provider configuration
+infra/providers.local.tf
+
+# Environment files and credentials
+.env
+.env.*
+*.key.json
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
