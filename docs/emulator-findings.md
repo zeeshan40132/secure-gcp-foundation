@@ -393,3 +393,39 @@ The project successfully created and verified supported foundation resources, co
 Cloud Router and Cloud NAT remain configured but undeployed because their Compute API collection is not implemented by the emulator. Secret-level IAM policy retrieval and runtime authorization enforcement also remain unverified.
 
 These limitations are documented explicitly so that the project demonstrates what was actually implemented and tested without overstating emulator capabilities.
+## 11. Logging, Monitoring, and Billing API Findings
+
+Additional read-only API probes were performed against Floci GCP 0.13.0.
+
+| Service/API | Endpoint tested | HTTP result | Finding |
+|---|---|---:|---|
+| Cloud Logging | `/v2/projects/floci-local/logs?pageSize=1` | 200 | Endpoint responded with an empty log list |
+| Cloud Logging sinks | `/v2/projects/floci-local/sinks` | 200 | Endpoint responded with an empty object |
+| Cloud Logging metrics | `/v2/projects/floci-local/metrics` | 404 | Tested endpoint was not found |
+| Cloud Monitoring alert policies | `/v3/projects/floci-local/alertPolicies` | 404 | Tested endpoint was not found |
+| Cloud Billing budgets | `/v1/billingAccounts/test-billing-account/budgets` | 404 | Tested endpoint was not found |
+
+### Interpretation and Limitations
+
+The successful Logging responses demonstrate that the tested endpoints respond, but do not prove that log ingestion, sink creation, audit logging, or log-based metrics work.
+
+The Monitoring and Billing probes returned 404. These results establish that the tested routes were unavailable; they do not establish that every operation in those services is unsupported.
+
+The installed Google Terraform provider includes resource schemas for:
+
+- `google_project_iam_audit_config`
+- `google_logging_project_sink`
+- `google_logging_metric`
+- `google_monitoring_alert_policy`
+- `google_monitoring_notification_channel`
+- `google_billing_budget`
+
+Provider schema availability does not guarantee emulator API compatibility.
+
+No audit configuration, Logging sink, log-based metric, Monitoring alert, notification channel, or billing budget has been deployed or verified through these probes.
+
+### Project Scope Decision
+
+Because this project does not use a real GCP account or billing account, unsupported or unverified logging, monitoring, and billing functionality will remain documented as a deployment requirement rather than being presented as a working control.
+
+A real GCP environment is required to validate audit log generation, log routing, alert delivery, and billing budget notifications.
